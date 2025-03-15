@@ -2,7 +2,8 @@
 
 int main() {
     set<string> word_list;
-    load_words(word_list, "words.txt");
+    string filename = "../src/words.txt";
+    load_words(word_list, filename);
     string start_word, end_word;
     cout << "Enter start word: ";
     cin >> start_word;

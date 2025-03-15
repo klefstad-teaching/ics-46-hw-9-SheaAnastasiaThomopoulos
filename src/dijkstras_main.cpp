@@ -2,8 +2,9 @@
 
 int main() {
     Graph G;
+    string filenamee = "../src/small.txt";
     try {
-        file_to_graph("small.txt", G);
+        file_to_graph(filenamee, G);
     } catch (const runtime_error& e) {
         cerr << "Error: " << e.what() << endl;
         return 1;
