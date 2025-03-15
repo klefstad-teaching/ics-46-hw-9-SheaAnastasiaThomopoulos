@@ -33,32 +33,38 @@ bool is_adjacent(const string& word1, const string& word2) {
 }
 
 vector<string> generate_word_ladder(const string& begin_word, const string& end_word, const set<string>& word_list) {
-    if (begin_word == end_word) {
-        return {};
-    }
-    queue<vector<string>> ladder_queue;
-    set<string> visited;
-    ladder_queue.push({begin_word});
-    visited.insert(begin_word);
-    while (!ladder_queue.empty()) {
-        int level_size = ladder_queue.size();
-        set<string> current_level_visited;
+    if (begin_word == end_word) return {};
+    set<string> forward_visited, backward_visited, current_level_visited;
+    queue<vector<string>> forward_queue, backward_queue;
+    forward_queue.push({begin_word});
+    backward_queue.push({end_word});
+    forward_visited.insert(begin_word);
+    backward_visited.insert(end_word);
+    while (!forward_queue.empty() && !backward_queue.empty()) {
+        if (forward_queue.size() > backward_queue.size()) {
+            swap(forward_queue, backward_queue);
+            swap(forward_visited, backward_visited);
+        }
+        int level_size = forward_queue.size();
+        current_level_visited.clear();
         for (int i = 0; i < level_size; ++i) {
-            vector<string> ladder = ladder_queue.front();
-            ladder_queue.pop();
+            vector<string> ladder = forward_queue.front();
+            forward_queue.pop();
             string last_word = ladder.back();
             for (const string& word : word_list) {
-                if (!visited.count(word) && is_adjacent(last_word, word)) {
+                if (!forward_visited.count(word) && is_adjacent(last_word, word)) {
                     vector<string> new_ladder = ladder;
                     new_ladder.push_back(word);
-                    if (word == end_word) return new_ladder;
+                    if (backward_visited.count(word)) { 
+                        return new_ladder;
+                    }
                     current_level_visited.insert(word);
-                    ladder_queue.push(new_ladder);
+                    forward_queue.push(new_ladder);
                 }
             }
         }
         for (const string& word : current_level_visited) {
-            visited.insert(word);
+            forward_visited.insert(word);
         }
     }
     return {};
