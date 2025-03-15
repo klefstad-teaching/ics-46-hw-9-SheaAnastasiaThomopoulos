@@ -1,15 +1,16 @@
 #include "dijkstras.h"
+#include <algorithm>
 
 vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& previous) {
     int n = G.numVertices;
     vector<int> distances(n, INF);
     previous.assign(n, -1);
     vector<bool> visited(n, false);
-    priority_queue<Node, vector<Node>, greater<Node>> pq;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
     distances[source] = 0;
-    pq.push({source, 0});
+    pq.push({0, source});
     while (!pq.empty()) {
-        int u = pq.top().vertex;
+        int u = pq.top().second;
         pq.pop();
         if (visited[u]) {
             continue;
@@ -21,7 +22,7 @@ vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& prev
             if (!visited[v] && distances[u] + weight < distances[v]) {
                 distances[v] = distances[u] + weight;
                 previous[v] = u;
-                pq.push({v, distances[v]});
+                pq.push({distances[v], v});
             }
         }
     }
@@ -37,7 +38,7 @@ vector<int> extract_shortest_path(const vector<int>&, const vector<int>& previou
     return path;
 }
 
-void print_path(const vector<int>& v, int total) {
+void print_path(const vector<int>& path, int total) {
     if (path.empty()) {
         cout << "No path found" << endl;
         return;
