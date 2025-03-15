@@ -77,6 +77,10 @@ void load_words(set<string> & word_list, const string& file_name) {
     while (file >> word) {
         word_list.insert(word);
     }
+    if (word_list.empty()) {
+        cerr << "Error: Loaded word list is empty!" << endl;
+        exit(1);
+    }
 }
 
 void print_word_ladder(const vector<string>& ladder) {
@@ -98,10 +102,17 @@ void verify_word_ladder() {
     set<string> word_list;
     string filename1 = "../src/words.txt";
     load_words(word_list, filename1);
-    vector<string> ladder1 = generate_word_ladder("cat", "dog", word_list);
-    vector<string> ladder2 = generate_word_ladder("marty", "curls", word_list);
-    vector<string> ladder3 = generate_word_ladder("code", "data", word_list);
-    print_word_ladder(ladder1);
-    print_word_ladder(ladder2);
-    print_word_ladder(ladder3);
+    vector<string> ladders[] = {
+        generate_word_ladder("cat", "dog", word_list),
+        generate_word_ladder("marty", "curls", word_list),
+        generate_word_ladder("code", "data", word_list),
+        generate_word_ladder("work", "play", word_list),
+        generate_word_ladder("sleep", "awake", word_list),
+        generate_word_ladder("car", "cheat", word_list)
+    };
+    for (const auto& ladder : ladders) {
+        if (!ladder.empty()) {
+            print_word_ladder(ladder);
+        }
+    }
 }
